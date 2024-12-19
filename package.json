@@ -5,7 +5,10 @@
   "dependencies": {
     "@testing-library/react": "^16.1.0",
     "@types/react-dom": "^19.0.2",
+    "classnames": "^2.5.1",
     "cra-template-typescript": "1.2.0",
+    "jsoneditor": "^10.1.2",
+    "jsoneditor-react": "^3.1.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-scripts": "5.0.1",
@@ -37,6 +40,7 @@
   },
   "devDependencies": {
     "@types/react": "^19.0.1",
-    "tailwindcss": "^3.4.16"
+    "tailwindcss": "^3.4.16",
+    "typescript": "^5.7.2"
   }
 }

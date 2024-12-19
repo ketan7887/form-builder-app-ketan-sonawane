@@ -2,7 +2,8 @@
 export interface FormSchema {
     formTitle: string;                      // Form title
     formDescription?: string;               // Optional form description
-    fields: FieldSchema[];                  // List of form fields
+    fields: FieldSchema[];  
+    buttons: ButtonSchema[];                // List of form fields
   }
   
   /** Represents each form field */
@@ -15,6 +16,15 @@ export interface FormSchema {
     validation?: FieldValidation;           // Optional validation rules
     options?: Option[] | undefined;              
     value?:string;       // For radio or checkbox types
+  }
+
+  /** Represents each button field */
+  export interface ButtonSchema {
+    id: number;                             // Unique identifier for the button
+    type: ButtonType;                        // Field type (reset, submit, button)
+    label: string;                          // button label
+    color?: string;                     // color scheme for button
+    function?:void | undefined;                        //custom function if required for button
   }
   
   /** Represents validation rules for a field */
@@ -41,4 +51,10 @@ export interface FormSchema {
     | "checkbox"
     | "textarea"
     | "file";
+
+  /** Union type for button types */
+  export type ButtonType =
+    | "reset"
+    | "submit"
+    | "button";
   

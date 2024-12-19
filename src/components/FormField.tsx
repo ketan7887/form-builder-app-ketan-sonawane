@@ -1,14 +1,15 @@
-import React from "react";
+import React, { useRef } from "react";
 import { FieldSchema } from "types/formSchemaTypes";
 
 interface FormFieldProps {
     field: FieldSchema;
     value: string;
     error?: string;
-    onChange: (value: string) => void;
+    onChange: (value: string | File) => void;
 }
 
 const FormField: React.FC<FormFieldProps> = ({ field, value, error, onChange }) => {
+    const fileInputRef = useRef<HTMLInputElement>(null);
     const renderInput = () => {
         switch (field.type) {
             case "text":
@@ -21,7 +22,7 @@ const FormField: React.FC<FormFieldProps> = ({ field, value, error, onChange }) 
                         id={field.id}
                         placeholder={field.placeholder || ""}
                         required={field.required}
-                        className="w-full px-4 py-2 mt-2 border rounded dark:bg-gray-700 dark:text-white"
+                        className="w-full px-5 py-2 mt-2 border rounded border-stone-400 dark:bg-gray-700 dark:text-white"
                         minLength={field.validation?.minLength}
                         maxLength={field.validation?.maxLength}
                         pattern={field.validation?.pattern}
@@ -35,7 +36,7 @@ const FormField: React.FC<FormFieldProps> = ({ field, value, error, onChange }) 
                         id={field.id}
                         placeholder={field.placeholder || ""}
                         required={field.required}
-                        className="w-full px-4 py-2 mt-2 border rounded dark:bg-gray-700 dark:text-white"
+                        className="w-full px-4 py-2 mt-2 border border-stone-400 rounded dark:bg-gray-700 dark:text-white"
                         value={value}
                         onChange={(e) => onChange(e.target.value)}
                     />
@@ -61,7 +62,7 @@ const FormField: React.FC<FormFieldProps> = ({ field, value, error, onChange }) 
                             type="checkbox"
                             name={field.id}
                             value={option.value}
-                            className="form-checkbox text-blue-500"
+                            className="form-checkbox text-blue-500 checked:bg-red-700"
                             onChange={(e) => onChange(e.target.value)}
                         />
                         <span className="ml-2 dark:text-gray-300">{option.label}</span>
@@ -69,13 +70,40 @@ const FormField: React.FC<FormFieldProps> = ({ field, value, error, onChange }) 
                 ));
             case "file":
                 return (
-                    <input
-                        type="file"
-                        id={field.id}
-                        className="mt-2 block w-full text-sm text-gray-500 dark:text-gray-300"
-                        value={value}
-                        onChange={(e) => onChange(e.target.value)}
-                    />
+                    // <>
+                    //     <input
+                    //         type="file"
+                    //         id={field.id}
+                    //         className="mt-2 block w-full text-sm text-gray-500 dark:text-gray-300"
+                    //         value={value}
+                    //         onChange={(e) => onChange(e.target.value)}
+                    //     />
+                    // </>
+                    <div className="flex items-center">
+                        <button
+                            type="button"
+                            onClick={() => fileInputRef.current?.click()}
+                            className="px-4 py-2 bg-slate-500 text-white rounded hover:bg-slate-600"
+                        >
+                            {value ? "Change File" : "Upload File"}
+                        </button>
+                        <input
+                            type="file"
+                            id={field.id}
+                            ref={fileInputRef}
+                            className="hidden"
+                            onChange={(e) => {
+                                if (e.target.files && e.target.files.length > 0) {
+                                    onChange(e.target.files[0]);
+                                }
+                            }}
+                        />
+                        {value && typeof value === "object" && (
+                            <span className="ml-4 text-gray-700 dark:text-gray-300">
+                                {(value as File).name}
+                            </span>
+                        )}
+                    </div>
                 );
             default:
                 return null;
@@ -86,7 +114,7 @@ const FormField: React.FC<FormFieldProps> = ({ field, value, error, onChange }) 
         <div className="mb-4">
             <label
                 htmlFor={field.id}
-                className="block text-gray-700 dark:text-gray-300 font-medium"
+                className="block text-gray-700 dark:text-gray-300 font-medium text-sm"
             >
                 {field.label} {field.required && <span className="text-red-500">*</span>}
             </label>
@@ -96,4 +124,4 @@ const FormField: React.FC<FormFieldProps> = ({ field, value, error, onChange }) 
     );
 };
 
-export default FormField;
+export default React.memo(FormField);

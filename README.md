@@ -1,46 +1,223 @@
-# Getting Started with Create React App
+# Dynamic Form Builder
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview
 
-## Available Scripts
+The **Dynamic Form Builder** is a flexible React-based project that dynamically generates forms from a JSON schema. It supports:
 
-In the project directory, you can run:
+- **Dynamic Form Fields**: Generates various form elements like text inputs, email fields, password inputs, checkboxes, radio buttons, file uploads, and text areas.
+- **Custom Button Actions**: Buttons with custom functionalities defined in the schema.
+- **Validation**: Real-time validation for fields based on schema-defined rules.
+- **JSON Schema Editor**: Users can dynamically edit the form schema using a built-in JSON editor.
+- **Dark Mode**: Built-in support for light and dark themes.
+- **Form Reset**: Reset the form to initial or default values.
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Features
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+1. **Dynamic Form Rendering**
 
-### `npm test`
+   - The form elements are generated based on a JSON schema.
+   - Schema supports advanced configurations like validation rules, placeholders, and custom button actions.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+2. **Custom Actions for Buttons**
 
-### `npm run build`
+   - Define and execute custom actions for buttons of type `button` in the schema.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+3. **Real-time Validation**
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+   - Validation rules include required fields, regex patterns, min/max lengths, and custom error messages.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+4. **Dark Mode Toggle**
 
-### `npm run eject`
+   - Switch between light and dark themes using a toggle button.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+5. **Schema Editor**
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+   - Modify the form schema dynamically via an integrated JSON editor.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+---
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Prerequisites
 
-## Learn More
+Before setting up the project, ensure you have the following installed:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- [Node.js](https://nodejs.org/) (v16.x or later recommended)
+- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
+- A code editor (e.g., [VS Code](https://code.visualstudio.com/))
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
+
+## Getting Started
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/your-username/dynamic-form-builder.git
+cd dynamic-form-builder
+```
+
+### 2. Install Dependencies
+
+Using npm:
+
+```bash
+npm install --legacy-peer-deps
+```
+
+Or using yarn:
+
+```bash
+yarn install
+```
+
+### 3. Start the Development Server
+
+Using npm:
+
+```bash
+npm start
+```
+
+Or using yarn:
+
+```bash
+yarn start
+```
+
+The application will run at `http://localhost:3000`.
+
+---
+
+## Project Structure
+
+```
+src/
+├── components/
+│   ├── FormGenerator.tsx        # Main component for rendering the form
+│   ├── FormField.tsx            # Component for rendering individual form fields
+│   ├── FormButton.tsx           # Component for rendering dynamic buttons
+│   ├── DarkModeToggle.tsx       # Component for toggling dark mode
+│   ├── JsonEditor.tsx           # Component for editing the form schema
+│
+├── types/
+│   └── FormSchema.ts            # TypeScript interfaces for the JSON schema
+│
+├── App.tsx                      # Main entry point for the app
+├── index.tsx                    # App bootstrap file
+└── styles/
+    └── index.css                # Global styles
+```
+
+---
+
+## Configuration
+
+### JSON Schema Example
+
+The form is rendered dynamically using a JSON schema. Below is an example schema:
+
+```json
+{
+  "formTitle": "User Registration Form",
+  "formDescription": "Please fill out the form to register.",
+  "fields": [
+    {
+      "id": "username",
+      "type": "text",
+      "label": "Username",
+      "required": true,
+      "placeholder": "Enter your username",
+      "validation": {
+        "minLength": 3,
+        "maxLength": 20
+      }
+    },
+    {
+      "id": "email",
+      "type": "email",
+      "label": "Email Address",
+      "required": true,
+      "placeholder": "Enter your email",
+      "validation": {
+        "pattern": "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$",
+        "message": "Please enter a valid email address"
+      }
+    }
+  ],
+  "buttons": [
+    {
+      "id": 1,
+      "label": "Submit",
+      "type": "submit",
+      "color": "primary"
+    },
+    {
+      "id": 2,
+      "label": "Reset",
+      "type": "reset",
+      "color": "secondary"
+    },
+    {
+      "id": 3,
+      "label": "Custom Action",
+      "type": "button",
+      "color": "primary",
+      "function": "customFunction"
+    }
+  ]
+}
+```
+
+---
+
+## Adding Custom Button Actions
+
+You can define custom functions for buttons of type `button` in the `customFunctions` prop. Here is an example:
+
+```tsx
+const customFunctions = {
+  customFunction: () => {
+    alert("Custom Action Executed!");
+    console.log("Custom function executed!");
+  }
+};
+
+<FormGenerator schema={schema} customFunctions={customFunctions} />
+```
+
+---
+
+## Key Scripts
+
+- **Start Development Server**: `npm start` or `yarn start`
+- **Build for Production**: `npm run build` or `yarn build`
+- **Run Tests**: `npm test` or `yarn test`
+
+---
+
+## Contributing
+
+Contributions are welcome! To contribute:
+
+1. Fork the repository.
+2. Create a feature branch: `git checkout -b feature-name`.
+3. Commit your changes: `git commit -m "Add some feature"`.
+4. Push to the branch: `git push origin feature-name`.
+5. Open a pull request.
+
+---
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+---
+
+## Contact
+
+For any inquiries or support, please reach out to:
+
+- **Email**: [your-email@example.com](mailto\:your-email@example.com)
+- **GitHub**: [your-username](https://github.com/your-username)
+

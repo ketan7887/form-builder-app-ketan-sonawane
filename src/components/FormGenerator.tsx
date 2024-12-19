@@ -1,85 +1,127 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import FormField from "./FormField";
 import { FormSchema, FieldSchema } from "types/formSchemaTypes";
-
+import FormButton from "./FormButton";
 interface FormGeneratorProps {
-  schema: FormSchema;
+    schema: FormSchema;
+    customFunctions?: { [key: string]: () => void };
 }
 
-const FormGenerator: React.FC<FormGeneratorProps> = ({ schema }) => {
-  const [formData, setFormData] = useState<{ [key: string]: any }>({});
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+const FormGenerator: React.FC<FormGeneratorProps> = ({ schema, customFunctions = {} }) => {
+    const [formData, setFormData] = useState<{ [key: string]: any }>({});
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  // Handle input changes and real-time validation
-  const handleChange = (field: FieldSchema, value: any) => {
-    setFormData((prevData) => ({ ...prevData, [field.id]: value }));
+    // Handle input changes and real-time validation
+    const handleChange = (field: FieldSchema, value: any) => {
+        setFormData((prevData) => ({ ...prevData, [field.id]: value }));
+        // Validation logic
+        let errorMessage = "";
+        if (field.required && !value) {
+            errorMessage = `${field.label} is required`;
+        } else if (field.validation?.minLength && value.length < field.validation.minLength) {
+            errorMessage = `${field.label} must be at least ${field.validation.minLength} characters`;
+        } else if (field.validation?.maxLength && value.length > field.validation.maxLength) {
+            errorMessage = `${field.label} cannot exceed ${field.validation.maxLength} characters`;
+        } else if (field.validation?.pattern && !new RegExp(field.validation.pattern).test(value)) {
+            errorMessage = field.validation.message || `${field.label} is invalid`;
+        }
+        setErrors((prevErrors) => ({ ...prevErrors, [field.id]: errorMessage }));
+    };
 
-    // Validation logic
-    let errorMessage = "";
-    if (field.required && !value) {
-      errorMessage = `${field.label} is required`;
-    } else if (field.validation?.minLength && value.length < field.validation.minLength) {
-      errorMessage = `${field.label} must be at least ${field.validation.minLength} characters`;
-    } else if (field.validation?.maxLength && value.length > field.validation.maxLength) {
-      errorMessage = `${field.label} cannot exceed ${field.validation.maxLength} characters`;
-    } else if (field.validation?.pattern && !new RegExp(field.validation.pattern).test(value)) {
-      errorMessage = field.validation.message || `${field.label} is invalid`;
-    }
+    // Handle form reset
+    const handleReset = useCallback(() => {
+        setFormData({});
+        setErrors({});
+      }, []);
 
-    setErrors((prevErrors) => ({ ...prevErrors, [field.id]: errorMessage }));
-  };
+    // Form sumbit function
+    const handleSubmit = useCallback((e: React.FormEvent) => {
+        e.preventDefault();
 
-  // Form sumbit function
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+        // Check for any remaining errors
+        const newErrors: { [key: string]: string } = {};
+        schema.fields.forEach((field) => {
+            if (field.required && !formData[field.id]) {
+                newErrors[field.id] = `${field.label} is required`;
+            }
+        });
 
-    // Check for any remaining errors
-    const newErrors: { [key: string]: string } = {};
-    schema.fields.forEach((field) => {
-      if (field.required && !formData[field.id]) {
-        newErrors[field.id] = `${field.label} is required`;
-      }
-    });
+        setErrors(newErrors);
 
-    setErrors(newErrors);
+        if (Object.keys(newErrors).length === 0) {
+            console.log("Form submitted successfully:", formData);
+        } else {
+            console.log("Validation failed:", newErrors);
+        }
+    },[formData, schema.fields]);
 
-    if (Object.keys(newErrors).length === 0) {
-      console.log("Form submitted successfully:", formData);
-    } else {
-      console.log("Validation failed:", newErrors);
-    }
-  };
+    const handleCustomButtonClick = useCallback((action: any) => {
+        const customFunction = customFunctions[action];
+        if (customFunction) {
+            customFunction();
+        } else {
+            console.warn(`No custom function defined for action: ${action}`);
+        }
+    },[customFunctions]);
 
-  return (
-    <form
-      onSubmit={handleSubmit}
-      className="p-6 bg-white dark:bg-gray-800 rounded shadow-md max-w-4xl mx-auto"
-    >
-      <h2 className="text-2xl font-bold mb-4 dark:text-white">
-        {schema.formTitle}
-      </h2>
-      {schema.formDescription && (
-        <p className="mb-4 text-gray-600 dark:text-gray-300">
-          {schema.formDescription}
-        </p>
-      )}
-      {schema.fields.map((field) => (
-        <FormField
-          key={field.id}
-          field={field}
-          value={formData[field.id] || ""}
-          error={errors[field.id]}
-          onChange={(value) => handleChange(field, value)}
-        />
-      ))}
-      <button
-        type="submit"
-        className="mt-6 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-      >
-        Submit
-      </button>
-    </form>
-  );
+    return (
+        <form
+            onSubmit={handleSubmit}
+            className="p-6 bg-white dark:bg-gray-800 rounded shadow-md max-w-4xl mx-auto"
+        >
+            <h2 className="text-2xl font-bold mb-4 dark:text-white">
+                {schema.formTitle}
+            </h2>
+            {schema.formDescription && (
+                <p className="mb-4 text-gray-600 dark:text-gray-300">
+                    {schema.formDescription}
+                </p>
+            )}
+            {schema.fields.map((field) => (
+                <FormField
+                    key={field.id}
+                    field={field}
+                    value={formData[field.id] || ""}
+                    error={errors[field.id]}
+                    onChange={(value) => handleChange(field, value)}
+                />
+            ))}
+            <div className="flex gap-4">
+                {schema.buttons.map((button) => (
+                    // button.type === 'reset' ? <button
+                    //     type={button.type}
+                    //     onClick={handleReset}
+                    //     className={classNames("mt-6 me-3 px-4 py-2 text-white rounded", button.color === 'primary' ? 'bg-sky-700 hover:bg-sky-800' : 'bg-gray-500 hover:bg-gray-700')}
+                    // >
+                    //     {button.label}
+                    // </button> : <button
+                    //     type={button.type}
+                    //     className={classNames("mt-6 me-3 px-4 py-2 text-white rounded", button.color === 'primary' ? 'bg-sky-700 hover:bg-sky-800' : 'bg-gray-500 hover:bg-gray-700')}
+                    // >
+                    //     {button.label}
+                    // </button>
+                    <FormButton
+                        key={button.id}
+                        label={button.label}
+                        type={button.type}
+                        color={button.color}
+                        className={
+                            button.color === "primary"
+                                ? "bg-blue-500 text-white hover:bg-blue-600"
+                                : "bg-gray-300 text-gray-700 hover:bg-gray-400"
+                        }
+                        onClick={
+                            button.type === "button"
+                                ? () => handleCustomButtonClick(button.function)
+                                : button.type === "reset"
+                                    ? handleReset
+                                    : undefined
+                        }
+                    />
+                ))}
+            </div>
+        </form>
+    );
 };
 
 export default FormGenerator;
