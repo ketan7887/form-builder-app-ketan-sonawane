@@ -18,10 +18,10 @@ div:has(> .jsoneditor) {
   height: 95%;
 }
 .jsoneditor.jsoneditor-mode-code{
-  @apply border border-stone-400
+  @apply border border-slate-300 rounded-md overflow-hidden
 }
 .jsoneditor-menu {
-  @apply !bg-sky-700 dark:!bg-gray-900 !border-b-stone-400 ;
+  @apply !bg-sky-700 dark:!bg-gray-900 !border-b-slate-300;
 }
 .jsoneditor-text {
   @apply p-3 bg-white dark:bg-gray-700 dark:text-white;

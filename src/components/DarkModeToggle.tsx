@@ -13,13 +13,13 @@ const DarkModeToggle: React.FC = () => {
   }, [isDarkMode]);
 
   return (
-    <div className="flex items-center justify-end mb-2 p-3">
+    <div className="flex items-center justify-end p-3">
       <label
         htmlFor="dark-mode-toggle"
         className="flex items-center cursor-pointer"
       >
         {/* Label for light/dark text */}
-        <span className="text-gray-700 dark:text-gray-300 mr-2">
+        <span className="text-gray-700 mr-2">
           {isDarkMode ? "Dark Mode" : "Light Mode"}
         </span>
 

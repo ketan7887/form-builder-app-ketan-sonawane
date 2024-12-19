@@ -136,6 +136,7 @@ The application is divided into reusable components:
 - `FormButton` for dynamic buttons.
 - `DarkModeToggle` for switching themes.
 - `FormGenerator` for orchestrating the form generation process.
+- `JsonEditor` for customising the JSON provided for the form generation process.
 
 ---
 

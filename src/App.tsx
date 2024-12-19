@@ -17,15 +17,13 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className='min-h-screen bg-gray-100 dark:bg-gray-900 pb-20'>
-      <header>
-        <div className='container mx-auto flex items-center'>
-          <h1 className='flex-1 text-2xl font-bold text-black dark:text-white ps-5'>Form builder tool</h1>
+    <div className='min-h-screen bg-gray-100 dark:bg-gray-900 pb-20 bg-gradient-to-r from-cyan-100 to-blue-200'>
+      <header className='container mx-auto flex items-center mb-2'>
+          <h1 className='flex-1 text-2xl font-bold text-black'>Form builder tool</h1>
           <DarkModeToggle /> {/*dark mode toggle switch*/}
-        </div>
       </header>
       <div className='container mx-auto'>
-        <div className='flex gap-8'>
+        <div className='flex gap-8 sm:flex-wrap'>
           <div className='flex-1'>
             <JsonEditor schema={formSchema} onSchemaChange={(schema) => setFormSchema(schema)} /> {/* Json editor component */}
           </div>

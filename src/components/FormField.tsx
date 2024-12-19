@@ -23,7 +23,7 @@ const FormField: React.FC<FormFieldProps> = ({ field, value, error, onChange }) 
                         id={field.id}
                         placeholder={field.placeholder || ""}
                         required={field.required}
-                        className="w-full px-5 py-2 mt-2 border rounded border-stone-400 dark:bg-gray-700 dark:text-white"
+                        className="w-full px-5 py-4 mt-2 border rounded-md border-slate-300 dark:bg-gray-700 dark:text-white"
                         minLength={field.validation?.minLength}
                         maxLength={field.validation?.maxLength}
                         pattern={field.validation?.pattern}
@@ -38,7 +38,7 @@ const FormField: React.FC<FormFieldProps> = ({ field, value, error, onChange }) 
                         id={field.id}
                         placeholder={field.placeholder || ""}
                         required={field.required}
-                        className="w-full px-4 py-2 mt-2 border border-stone-400 rounded dark:bg-gray-700 dark:text-white"
+                        className="w-full px-4 py-4 mt-2 border rounded-md border-slate-300 rounded dark:bg-gray-700 dark:text-white"
                         value={value}
                         onChange={(e) => onChange(e.target.value)}
                     />
@@ -104,7 +104,7 @@ const FormField: React.FC<FormFieldProps> = ({ field, value, error, onChange }) 
                         id={field.id}
                         value={value || ""}
                         onChange={(e) => onChange(e.target.value)}
-                        className="w-full px-4 py-2 mt-1 border border-stone-400 rounded dark:bg-gray-700 dark:text-white"
+                        className="w-full px-4 py-4 mt-2 border rounded-md border-slate-300 rounded dark:bg-gray-700 dark:text-white"
                     >
                         <option value="">Select an option</option>
                         {field.options?.map((option) => (

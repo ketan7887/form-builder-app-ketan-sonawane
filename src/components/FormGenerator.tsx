@@ -68,7 +68,7 @@ const FormGenerator: React.FC<FormGeneratorProps> = ({ schema, customFunctions =
     return (
         <form
             onSubmit={handleSubmit}
-            className="p-6 bg-white dark:bg-gray-800 rounded shadow-md max-w-4xl mx-auto"
+            className="p-6 bg-white dark:bg-gray-800 rounded-md shadow-md max-w-4xl mx-auto shadow-xl"
         >
             <h2 className="text-2xl font-bold mb-4 dark:text-white">
                 {schema.formTitle}
