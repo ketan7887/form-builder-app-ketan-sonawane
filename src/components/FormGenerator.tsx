@@ -38,7 +38,7 @@ const FormGenerator: React.FC<FormGeneratorProps> = ({ schema, customFunctions =
     const handleSubmit = useCallback((e: React.FormEvent) => {
         e.preventDefault();
 
-        // Check for any remaining errors
+        // Check any remaining errors
         const newErrors: { [key: string]: string } = {};
         schema.fields.forEach((field) => {
             if (field.required && !formData[field.id]) {
@@ -55,6 +55,7 @@ const FormGenerator: React.FC<FormGeneratorProps> = ({ schema, customFunctions =
         }
     },[formData, schema.fields]);
 
+    //handle for custom button click action
     const handleCustomButtonClick = useCallback((action: any) => {
         const customFunction = customFunctions[action];
         if (customFunction) {
@@ -88,18 +89,6 @@ const FormGenerator: React.FC<FormGeneratorProps> = ({ schema, customFunctions =
             ))}
             <div className="flex gap-4">
                 {schema.buttons.map((button) => (
-                    // button.type === 'reset' ? <button
-                    //     type={button.type}
-                    //     onClick={handleReset}
-                    //     className={classNames("mt-6 me-3 px-4 py-2 text-white rounded", button.color === 'primary' ? 'bg-sky-700 hover:bg-sky-800' : 'bg-gray-500 hover:bg-gray-700')}
-                    // >
-                    //     {button.label}
-                    // </button> : <button
-                    //     type={button.type}
-                    //     className={classNames("mt-6 me-3 px-4 py-2 text-white rounded", button.color === 'primary' ? 'bg-sky-700 hover:bg-sky-800' : 'bg-gray-500 hover:bg-gray-700')}
-                    // >
-                    //     {button.label}
-                    // </button>
                     <FormButton
                         key={button.id}
                         label={button.label}

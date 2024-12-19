@@ -33,6 +33,8 @@ export interface FormSchema {
     maxLength?: number;                     // Maximum length of the input
     pattern?: string;                       // Regex pattern for input validation
     message?: string;                       // Custom validation message
+    min?:number;                              // validation for number fields
+    max?:number;
   }
   
   /** Represents options for fields like radio buttons and checkboxes */
@@ -50,7 +52,7 @@ export interface FormSchema {
     | "radio"
     | "checkbox"
     | "textarea"
-    | "file";
+    | "file" | "select" | "number";
 
   /** Union type for button types */
   export type ButtonType =

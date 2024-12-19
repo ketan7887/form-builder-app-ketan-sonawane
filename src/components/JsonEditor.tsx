@@ -10,12 +10,6 @@ interface JsonEditorProps {
 const JsonEditor: React.FC<JsonEditorProps> = ({ schema, onSchemaChange }) => {
     const editorRef = useRef<any>(null);
 
-    // const handleChange = (schema: any) => {
-    //     if (schema) {
-    //         onSchemaChange(schema);
-    //     }
-    // };
-
     const handleChange = debounce((schema: any) => {
         if (schema) {
             onSchemaChange(schema);
@@ -31,7 +25,6 @@ const JsonEditor: React.FC<JsonEditorProps> = ({ schema, onSchemaChange }) => {
                 onChange={handleChange}
                 mode="code"
                 modes={["code", "tree"]}
-            // theme={document.documentElement.classList.contains("dark") ? "ace/theme/twilight" : "ace/theme/github"}
             />
         </div>
     );

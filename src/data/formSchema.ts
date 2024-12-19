@@ -55,6 +55,29 @@ export const formSchema: FormSchema = {
       ],
     },
     {
+      id: "age",
+      type: "number",
+      label: "Age",
+      required: true,
+      placeholder: "Enter your age",
+      validation: {
+        min: 18,
+        max: 99,
+        message: "Age must be between 18 and 99"
+      }
+    },
+    {
+      id: "country",
+      type: "select",
+      label: "Country",
+      required: true,
+      options: [
+        { value: "us", label: "United States" },
+        { value: "ca", label: "Canada" },
+        { value: "uk", label: "United Kingdom" }
+      ]
+    },
+    {
       id: "hobbies",
       type: "checkbox",
       label: "Hobbies",

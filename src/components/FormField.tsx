@@ -5,7 +5,7 @@ interface FormFieldProps {
     field: FieldSchema;
     value: string;
     error?: string;
-    onChange: (value: string | File) => void;
+    onChange: (value: string | File | number) => void;
 }
 
 const FormField: React.FC<FormFieldProps> = ({ field, value, error, onChange }) => {
@@ -16,6 +16,7 @@ const FormField: React.FC<FormFieldProps> = ({ field, value, error, onChange }) 
             case "email":
             case "password":
             case "date":
+            case "number":
                 return (
                     <input
                         type={field.type}
@@ -27,7 +28,8 @@ const FormField: React.FC<FormFieldProps> = ({ field, value, error, onChange }) 
                         maxLength={field.validation?.maxLength}
                         pattern={field.validation?.pattern}
                         value={value}
-                        onChange={(e) => onChange(e.target.value)}
+                        // onChange={(e) => onChange(e.target.value)}
+                        onChange={(e) => onChange(field.type === "number" ? +e.target.value : e.target.value)}
                     />
                 );
             case "textarea":
@@ -70,15 +72,6 @@ const FormField: React.FC<FormFieldProps> = ({ field, value, error, onChange }) 
                 ));
             case "file":
                 return (
-                    // <>
-                    //     <input
-                    //         type="file"
-                    //         id={field.id}
-                    //         className="mt-2 block w-full text-sm text-gray-500 dark:text-gray-300"
-                    //         value={value}
-                    //         onChange={(e) => onChange(e.target.value)}
-                    //     />
-                    // </>
                     <div className="flex items-center">
                         <button
                             type="button"
@@ -104,6 +97,22 @@ const FormField: React.FC<FormFieldProps> = ({ field, value, error, onChange }) 
                             </span>
                         )}
                     </div>
+                );
+            case "select":
+                return (
+                    <select
+                        id={field.id}
+                        value={value || ""}
+                        onChange={(e) => onChange(e.target.value)}
+                        className="w-full px-4 py-2 mt-1 border border-stone-400 rounded dark:bg-gray-700 dark:text-white"
+                    >
+                        <option value="">Select an option</option>
+                        {field.options?.map((option) => (
+                            <option key={option.value} value={option.value}>
+                                {option.label}
+                            </option>
+                        ))}
+                    </select>
                 );
             default:
                 return null;
